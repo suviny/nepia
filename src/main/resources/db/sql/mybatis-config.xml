@@ -19,6 +19,6 @@
     </settings>
 
     <plugins>
-        <plugin interceptor="com.suvin.nepia.global.infra.audit.AuditTimeInterceptor"/>
+        <plugin interceptor="com.suvin.nepia.global.infra.interceptor.AuditingInterceptor"/>
     </plugins>
 </configuration>

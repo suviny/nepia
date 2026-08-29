@@ -12,7 +12,7 @@ import java.sql.SQLException;
 /**
  * {@link CodeEnum} 인터페이스를 구현한 열거형과 데이터베이스 코드값 간의 상호 변환을 수행하는 타입 핸들러
  *
- * @param <E>   타입 핸들러에서 처리할 열거형 클래스 타입
+ * @param <E> 타입 핸들러에서 처리할 {@link CodeEnum}을 구현한 열거형 타입
  *
  * @author PARK SU BIN
  * @version 1.0
@@ -26,12 +26,13 @@ public class CodeEnumTypeHandler<E extends Enum<E> & CodeEnum> extends BaseTypeH
 
     public CodeEnumTypeHandler(Class<E> type) {
         if (type == null) {
-            throw new IllegalArgumentException("Type argument cannot be null");
+            throw new IllegalArgumentException("Type argument cannot be null.");
         }
         this.type = type;
         this.enums = type.getEnumConstants();
         if (!type.isInterface() && this.enums == null) {
-            throw new IllegalArgumentException("'" + type.getSimpleName() + "' does not represent an enum type");
+            throw new IllegalArgumentException(
+                    "'" + type.getSimpleName() + "' does not represent an enum type.");
         }
     }
 
@@ -42,25 +43,26 @@ public class CodeEnumTypeHandler<E extends Enum<E> & CodeEnum> extends BaseTypeH
 
     @Override
     public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
-        return rs.wasNull() ? null : fromCode(rs.getString(columnName));
+        return rs.wasNull() ? null : resolveByCode(rs.getString(columnName));
     }
 
     @Override
     public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-        return rs.wasNull() ? null : fromCode(rs.getString(columnIndex));
+        return rs.wasNull() ? null : resolveByCode(rs.getString(columnIndex));
     }
 
     @Override
     public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-        return cs.wasNull() ? null : fromCode(cs.getString(columnIndex));
+        return cs.wasNull() ? null : resolveByCode(cs.getString(columnIndex));
     }
 
-    private E fromCode(String code) {
-        for (E e : enums) {
-            if (e.getCode().equals(code)) {
+    private E resolveByCode(String code) {
+        for (E e : this.enums) {
+            if (code.equals(e.getCode())) {
                 return e;
             }
         }
-        throw new IllegalArgumentException("Unknown code '" + code + "' in " + type.getSimpleName());
+        throw new IllegalArgumentException(
+                "Unknown code '" + code + "' in '" + type.getSimpleName() + "'.");
     }
 }
