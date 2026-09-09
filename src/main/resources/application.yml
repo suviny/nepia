@@ -29,7 +29,7 @@ mybatis:
   # 마이바티스 설정 파일 경로
   config-location: classpath:db/sql/mybatis-config.xml
   # 매퍼 파일에서 매핑타입으로 사용될 클래스의 패키지 등록
-  type-aliases-package: com.suvin.nepia.domain.**
+  type-aliases-package: com.suvin.nepia.domain.**.model, com.suvin.nepia.domain.**.dto
   # 자체 정의한 타입 핸들러의 패키지 등록
   type-handlers-package: com.suvin.nepia.global.infra.handler
   # 매퍼 XML 파일 경로
